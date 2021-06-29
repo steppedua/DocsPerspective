@@ -1,6 +1,8 @@
 package com.steppedua.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,26 +29,32 @@ public class User implements Serializable {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     @Column(name = "user_id")
+    @JsonProperty("user_id")
     private String userId;
 
     @NotEmpty
     @Column(name = "user_name")
     @Size(min = 4, max = 15)
+    @JsonProperty("user_name")
     private String userName;
 
     @NotEmpty
     @Column(name = "login")
     @Size(min = 4, max = 15)
+    @JsonProperty("login")
     private String login;
 
     @NotEmpty
     @Column(name = "password")
     @Size(min = 4, max = 15)
+    @JsonProperty("password")
     private String password;
 
     @NotEmpty
     @Column(name = "creation_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Temporal(value = TemporalType.TIMESTAMP)
+    @JsonProperty("creation_date")
     private Date creationDate;
 
     @JsonIgnore
@@ -76,7 +84,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserRepository{" +
                 "userId='" + userId + '\'' +
                 ", userName='" + userName + '\'' +
                 ", login='" + login + '\'' +
@@ -84,5 +92,14 @@ public class User implements Serializable {
                 ", creationDate=" + creationDate +
                 ", documents=" + documents +
                 '}';
+    }
+
+    public User(String userId, String userName, String login, String password, Date creationDate, Set<Role> roles) {
+        this.userId = userId;
+        this.userName = userName;
+        this.login = login;
+        this.password = password;
+        this.creationDate = creationDate;
+        this.roles = roles;
     }
 }

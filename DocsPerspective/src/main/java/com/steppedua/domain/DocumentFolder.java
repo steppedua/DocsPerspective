@@ -1,6 +1,7 @@
 package com.steppedua.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +26,13 @@ public class DocumentFolder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "document_folder_id")
+    @JsonProperty("document_folder_id")
     private Long documentsFolderId;
 
     @NotEmpty
     @Column(name = "document_folder_name")
     @Size(min = 4, max = 15)
+    @JsonProperty("document_folder_name")
     private String documentsFolderName;
 
     @JsonIgnore

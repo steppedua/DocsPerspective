@@ -1,6 +1,7 @@
 package com.steppedua.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,13 @@ public class Attributes implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("attribute_id")
     private Long attributeId;  // Уникальный идентификатор атрибута
 
     @NotEmpty
     @Size(min = 3, max = 15)
     @Column(name = "attribute_name", unique = true, nullable = false)
+    @JsonProperty("attribute_name")
     private String attributeName;  // Название атрибута
 
     // У каждого документа может быть несколько атрибутов
