@@ -3,31 +3,28 @@ package com.steppedua.controller;
 import com.steppedua.domain.Document;
 import com.steppedua.dto.DocumentDto;
 import com.steppedua.mappers.DocumentMapper;
-import com.steppedua.repository.DocumentRepository;
-import com.steppedua.service.DocumentService;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
+import com.steppedua.service.DocumentServiceImpl;
+import com.steppedua.service.PageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Base64;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/documents")
 public class DocumentController {
 
-    private final DocumentService documentServiceImpl;
+    private final DocumentServiceImpl documentServiceImpl;
+    private final PageServiceImpl pageServiceImpl;
     private final DocumentMapper documentMapper;
 
     @Autowired
-    public DocumentController(DocumentService documentServiceImpl, DocumentMapper documentMapper) {
+    public DocumentController(DocumentServiceImpl documentServiceImpl, PageServiceImpl pageServiceImpl, DocumentMapper documentMapper) {
         this.documentServiceImpl = documentServiceImpl;
+        this.pageServiceImpl = pageServiceImpl;
         this.documentMapper = documentMapper;
     }
 
@@ -56,7 +53,7 @@ public class DocumentController {
                                                   @PathVariable(name = "userId") String userId
     ) throws IOException {
 
-        byte[] newDocumentData = documentServiceImpl.addPage(documentId, userId);
+        byte[] newDocumentData = pageServiceImpl.addPage(documentId, userId);
 
         Document document = documentServiceImpl.changeFilePage(documentId, userId, newDocumentData);
 

@@ -2,25 +2,20 @@ package com.steppedua.service;
 
 import com.steppedua.domain.Document;
 import com.steppedua.repository.DocumentRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentService {
+public class DocumentServiceImpl {
     private final DocumentRepository documentRepository;
 
     public Optional<Document> uploadDocument(Document document) {
@@ -59,35 +54,4 @@ public class DocumentService {
 
         return documentRepository.save(byDocumentIdAndOwnerId.get());
     }
-
-    public byte[] addPage(String documentId, String userId) throws IOException {
-        // Получаем документ в двоичной кодировке формата Base64
-        byte[] documentData = documentRepository.getDataOnDocumentIdAndOwnerId(documentId, userId);
-
-        // Получаем имя документа
-        String documentName = documentRepository.getDocumentNameOnDocumentIdAndOwnerId(documentId, userId);
-
-        File file = new File("/Users/edstepa/Desktop/Диплом/DocsPerspective/src/main/resources/documents/" + documentName);
-
-        // Тут декодируем файл из БД
-        byte[] decodeDocumentDataFromDB = Base64.getDecoder().decode(documentData);
-
-        PDDocument pdDocument = PDDocument.load(decodeDocumentDataFromDB);
-
-        // Создаем новую страницу
-        PDPage blankPage = new PDPage();
-        pdDocument.addPage(blankPage);
-
-        pdDocument.save(file);
-        pdDocument.close();
-
-        // Делаем запись в массив байтов отредактированный документ
-        byte[] readAllBytesFromFile = Files.readAllBytes(file.toPath());
-
-        // Кодируем файл, а потом засовываем в БД
-        byte[] encodeFile = Base64.getEncoder().encode(readAllBytesFromFile);
-
-        return encodeFile;
-    }
-
 }
